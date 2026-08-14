@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
-import { ProductsResponse } from '../interfaces/product.interface';
+import { Product, ProductsResponse } from '../interfaces/product.interface';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
@@ -35,8 +35,10 @@ export class ProductsService {
 
   }
 
-  getImage(url: string) {
-    return this.http.get(`${BASE_URL}/product/${url}`)
+
+
+  getProductByIdSlug(idSlug: string): Observable<Product> {
+    return this.http.get<Product>(`${BASE_URL}/products/${idSlug}`)
   }
 
 
