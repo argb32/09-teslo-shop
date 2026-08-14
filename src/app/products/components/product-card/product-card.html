@@ -1,6 +1,7 @@
 <div class=" card card-sm bg-base-100 shadow-xl animate-fadeIn">
   <figure>
-    <img [src]="imageUrl()" alt="{{product().title}}" />
+
+    <img [src]="product().images | productImage" alt="{{product().title}}" />
   </figure>
   <div class="card-body">
     <h2 class="card-title font-montserrat text-lg text-accent">{{product().title}}</h2>
