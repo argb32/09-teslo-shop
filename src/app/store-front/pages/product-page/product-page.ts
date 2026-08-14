@@ -3,10 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 import { ProductsService } from '../../../products/services/products.service';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { JsonPipe } from '@angular/common';
+import { ProductCarousel } from "../../../products/components/product-carousel/product-carousel";
 
 @Component({
   selector: 'app-product-page',
-  imports: [JsonPipe],
+  imports: [ProductCarousel],
   templateUrl: './product-page.html',
   changeDetection: ChangeDetectionStrategy.Eager,
 })
