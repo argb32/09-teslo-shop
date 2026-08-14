@@ -10,21 +10,16 @@ import { rxResource } from '@angular/core/rxjs-interop';
 })
 export class HomePage {
 
-  productServive = inject(ProductsService);
+  productService = inject(ProductsService);
 
   productResource = rxResource({
     params: () => ({}),
     stream: ({ params }) => {
-      return this.productServive.getProducts({})
+      return this.productService.getProducts({})
     }
   })
 
-  imageResource = rxResource({
-    params: () => ({}),
-    stream: ({ params }) => {
-      return this.productServive.getImage('')
-    }
-  })
+
 
 
 }
