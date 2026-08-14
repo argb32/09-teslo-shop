@@ -18,11 +18,13 @@ export class ProductsService {
   private http = inject(HttpClient);
 
   private productsCache = new Map<string, ProductsResponse>();
+  private productCache = new Map<string, Product>();
 
 
   getProducts(options: Options): Observable<ProductsResponse> {
     //configuramos las opciones de la peticion por defecto si no vienen especificadas
     const { limit = 9, offset = 0, gender = '' } = options;
+
 
     const key = `${limit}-${offset}-${gender}`;
     //con esto buscamos si la key existe, y en caso afirmativo devolvemos los productos in hacer una nueva consulta a la api
@@ -48,7 +50,11 @@ export class ProductsService {
 
 
   getProductByIdSlug(idSlug: string): Observable<Product> {
-    return this.http.get<Product>(`${BASE_URL}/products/${idSlug}`)
+    if (this.productCache.has(idSlug)) return of(this.productCache.get(idSlug)!)
+
+    return this.http.get<Product>(`${BASE_URL}/products/${idSlug}`).pipe(
+      tap(resp => this.productCache.set(idSlug, resp))
+    )
   }
 
 
