@@ -32,9 +32,8 @@ export class AuthService {
   });
 
   //estos metodos los usamos como getters para que no puedan modificar los user y token "reales" desde el exterior
-  user = computed(() => this._user);
-  token = computed(() => this._token)
-
+  user = computed(() => this._user());
+  token = computed(() => this._token())
   //para los post primero la url del endpoint y despues la data
   login(email: string, password: string): Observable<boolean> {
     return this.http.post<AuthResponse>(`${baseUrl}/auth/login`, {
