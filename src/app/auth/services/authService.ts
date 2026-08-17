@@ -1,4 +1,4 @@
-import { computed, inject, Service, signal } from '@angular/core';
+import { computed, effect, inject, Service, signal } from '@angular/core';
 import { User } from '../interfaces/user.interface';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
@@ -13,7 +13,8 @@ const baseUrl = environment.baseUrl
 export class AuthService {
   private _authStatus = signal<AuthStatus>('checking');
   private _user = signal<User | null>(null);
-  private _token = signal<string | null>(null);
+  private _token = signal<string | null>(localStorage.getItem('token'));
+  tokenEffect = effect(() => console.log("token desde el service", this._token()))
 
   private http = inject(HttpClient);
 
@@ -55,9 +56,9 @@ export class AuthService {
     }
 
     return this.http.get<AuthResponse>(`${baseUrl}/auth/check-status`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
     }).pipe(
       //el tap es para disparar efectos secundarios a un observable
       map(resp => this.handleAuthSuccess(resp)),
@@ -71,8 +72,8 @@ export class AuthService {
     this._user.set(null);
     this._authStatus.set('not-authenticated');
 
-    //acordarse de limpiar el local storage
-    localStorage.removeItem('teken');
+    // TODO: acordarse de limpiar el local storage
+    // localStorage.removeItem('teken');
   }
 
   // private handleAuthSuccess(resp: AuthResponse) {
