@@ -21,9 +21,7 @@
         <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
       </g>
     </svg>
-    <input type="password" required placeholder="Password" minlength="8" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-      title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
-      formControlName="password" />
+    <input type="password" required placeholder="Password" formControlName="password" />
   </label>
   <button class="btn btn-secondary" type="submit">
     Login
