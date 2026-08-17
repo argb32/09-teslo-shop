@@ -14,7 +14,6 @@ export class AuthService {
   private _authStatus = signal<AuthStatus>('checking');
   private _user = signal<User | null>(null);
   private _token = signal<string | null>(localStorage.getItem('token'));
-  tokenEffect = effect(() => console.log("token desde el service", this._token()))
 
   private http = inject(HttpClient);
 
@@ -72,8 +71,7 @@ export class AuthService {
     this._user.set(null);
     this._authStatus.set('not-authenticated');
 
-    // TODO: acordarse de limpiar el local storage
-    // localStorage.removeItem('teken');
+    localStorage.removeItem('teken');
   }
 
   // private handleAuthSuccess(resp: AuthResponse) {

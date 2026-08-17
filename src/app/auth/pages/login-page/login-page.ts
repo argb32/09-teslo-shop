@@ -23,11 +23,7 @@ export class LoginPage {
   });
 
   onSubmit() {
-    console.log('Formulario:', this.loginForm);
-    console.log('Valor:', this.loginForm.value);
-    console.log('Email:', this.loginForm.controls.email.errors);
-    console.log('Password:', this.loginForm.controls.password.errors);
-    console.log('Invalid:', this.loginForm.invalid);
+
     if (this.loginForm.invalid) {
       this.hasErrors.set(true);
       setTimeout(() => {
