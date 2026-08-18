@@ -13,6 +13,9 @@ const baseUrl = environment.baseUrl
 export class AuthService {
   private _authStatus = signal<AuthStatus>('checking');
   private _user = signal<User | null>(null);
+
+  isAdmin = computed(() => this._user()?.roles.includes('admin') ?? false);
+
   private _token = signal<string | null>(localStorage.getItem('token'));
 
   private http = inject(HttpClient);
