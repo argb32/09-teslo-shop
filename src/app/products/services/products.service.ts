@@ -66,5 +66,11 @@ export class ProductsService {
     )
   }
 
+  //Como guardamos los productos en el caché para no hacer multiples peticiones hay que limpiarlo al hacer un update
+  updateProduct(id: string, productLike: Partial<Product>): Observable<Product>{
 
+    return this.http.patch<Product>(`${BASE_URL}/products/${id}`, productLike);
+
+
+  }
 }

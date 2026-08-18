@@ -5,23 +5,39 @@
   <!-- Datos generales -->
   <div class="flex flex-col gap-2">
     <h2 class="text-2xl font-bold h-12">Datos generales</h2>
-    <input formControlName="title" type="text" placeholder="Título" class="input input-bordered w-full" />
-
-    <input formControlName="slug" type="text" placeholder="Slug" class="input input-bordered w-full" />
-
-    <textarea formControlName="description" class="textarea textarea-bordered" placeholder="Descripción"
-      rows="6"></textarea>
+    <input
+    formControlName="title"
+    type="text"
+    placeholder="Título"
+    class="input input-bordered w-full"
+      [class.border-red-500]="productForm.get('title')?.errors ?? false" />
+    <form-error-label [control]="productForm.get('title')!" />
+    <input formControlName="slug" type="text" placeholder="Slug" class="input input-bordered w-full"
+      [class.border-red-500]="productForm.get('slug')?.errors ?? false" />
+    <form-error-label [control]="productForm.get('slug')!" />
+    <textarea formControlName="description" class="textarea textarea-bordered" placeholder="Descripción" rows="6"
+      [class.border-red-500]="productForm.get('description')?.errors ?? false"></textarea>
+    <form-error-label [control]="productForm.get('description')!" />
 
     <h2 class="text-lg font-bold">Datos de venta</h2>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-      <input formControlName="price" type="number" placeholder="Precio" class="input input-bordered w-full" />
+      <div>
+        <input formControlName="price" type="number" placeholder="Precio" class="input input-bordered w-full"
+          [class.border-red-500]="productForm.get('price')?.errors ?? false" />
+        <form-error-label [control]="productForm.get('price')!" />
+      </div>
+      <div>
+        <input formControlName="stock" type="number" placeholder="Inventario" class="input input-bordered w-full"
+          [class.border-red-500]="productForm.get('stock')?.errors ?? false" />
+        <form-error-label [control]="productForm.get('stock')!" />
+      </div>
 
-      <input formControlName="stock" type="number" placeholder="Inventario" class="input input-bordered w-full" />
     </div>
 
     <!-- tags -->
-    <input formControlName="tags" type="text" placeholder="Tags" class="input input-bordered w-full" />
+    <input formControlName="tags" type="text" placeholder="Tags" class="input input-bordered w-full"
+      [class.border-red-500]="productForm.get('tags')?.errors ?? false" />
 
     <!-- Botones para el género -->
     <div class="grid grid-cols-4 gap-2">

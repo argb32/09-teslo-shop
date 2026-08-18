@@ -1,16 +1,20 @@
-import { Component, inject, input, OnInit } from '@angular/core';
+import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { Product } from '../../../../products/interfaces/product.interface';
 import { ProductCarousel } from "../../../../products/components/product-carousel/product-carousel";
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormUtils } from '../../../../utils/form-utils';
+import { FormErrorLabel } from "../../../../shared/components/form-error-label/form-error-label";
+import { isValidDate } from 'rxjs/internal/util/isDate';
+import { ProductsService } from '../../../../products/services/products.service';
 
 @Component({
   selector: 'product-details',
-  imports: [ProductCarousel, ReactiveFormsModule],
+  imports: [ProductCarousel, ReactiveFormsModule, FormErrorLabel],
   templateUrl: './product-details.html',
 })
 export class ProductDetails implements OnInit {
   product = input.required<Product>();
+  productsService = inject(ProductsService)
 
   fb = inject(FormBuilder);
 
@@ -40,9 +44,32 @@ export class ProductDetails implements OnInit {
 
 
   }
-
   onSubmit() {
-    console.log(this.productForm.value)
+
+    const isValid = this.productForm.valid
+    this.productForm.markAllAsTouched();
+
+    if(!isValid) return;
+
+    const formValue = this.productForm.value;
+
+
+    //partial es un Ojecto (product en este caso) que tiene sus campos opcionales
+    const productLike: Partial<Product> = {
+      ...(formValue as any),
+      tags: formValue.tags
+        ?.toLowerCase()
+        .split(',')
+        .map((tag) => tag.trim()) ?? [],
+
+    };
+
+    this.productsService.updateProduct( this.product().id, productLike).subscribe(
+      product => {
+        console.log('Producto actualizado')
+      }
+    );
+
   }
 
   onSizeClicked(size: string) {
