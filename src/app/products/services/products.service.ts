@@ -73,4 +73,24 @@ export class ProductsService {
 
 
   }
+
+  updateProductCache(product: Product) {
+    const productId = product.id;
+
+    //esto para actualizar el cache del producto (singular)
+    this.productCache.set(productId, product);
+
+    //esto para el caché de los productos
+    //en el cache tenemos un arreglo de productos, por lo que tenemos que recorrelo
+    //y buscar el id que coincida
+    this.productsCache.forEach(productResponse => {
+      productResponse.products = productResponse.products.map((currenProduct) => {
+        return currenProduct.id === productId ? product : currenProduct;
+      })
+    })
+
+
+
+  }
+
 }
