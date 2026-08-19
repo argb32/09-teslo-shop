@@ -1,4 +1,4 @@
-import { Component, inject, input, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
 import { Product } from '../../../../products/interfaces/product.interface';
 import { ProductCarousel } from "../../../../products/components/product-carousel/product-carousel";
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -21,6 +21,10 @@ export class ProductDetails implements OnInit {
   fb = inject(FormBuilder);
 
   wasSaved = signal(false);
+  tempImages = signal<string[]>([]);
+  imageFileList: FileList | undefined = undefined;
+
+  allImages = computed<string[]>(() => [...this.product().images, ...this.tempImages()]);
 
   productForm = this.fb.group({
     title: ['', Validators.required],
@@ -118,5 +122,23 @@ export class ProductDetails implements OnInit {
 
   }
 
+  //Images
+  onFilesChanged(event: Event) {
+    //recibimos los files desde el event y los guardamos en una variable
+    //esto nos devuelve un objeto no un array (con la simagenes dentro)
+    const fileList = (event.target as HTMLInputElement).files;
+
+    this.imageFileList = fileList ?? undefined;
+
+
+    //De esta manera se genera un url de las imagenes para poder usarlas directamente en el navegador
+    const imagesUrls = Array.from(fileList ?? []).map(file =>
+      URL.createObjectURL(file)
+    );
+
+    this.tempImages.set(imagesUrls)
+
+
+  }
 
 }

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, input, viewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, input, OnChanges, SimpleChanges, viewChild } from '@angular/core';
 
 // import Swiper JS
 import Swiper from 'swiper';
@@ -18,12 +18,12 @@ import { ProductImagePipe } from '../../pipes/product-image-pipe';
   styles: `
   .swiper {
     width: 100%;
-    height: 500px;
+    height: 100%;
   }
 
   `
 })
-export class ProductCarousel implements AfterViewInit {
+export class ProductCarousel implements AfterViewInit, OnChanges {
   // const swiper = new Swiper(...);
 
   images = input.required<string[]>()
@@ -31,12 +31,32 @@ export class ProductCarousel implements AfterViewInit {
   //para tener una referencia a aun div hacemos lo siguiente.
   swiperDiv = viewChild.required<ElementRef>('swiperDiv');
 
+  swiper: Swiper | undefined = undefined;
+
+
+
+  ngOnChanges(changes: SimpleChanges): void {
+    //si es la primera vez que se carga el swiper no hacer nada
+    if (changes['images'].firstChange) return
+    //si el swiper todavia no existe no hacer nada
+    if (!this.swiper) return
+
+    //si no es el priemer cambio, destruimos el swipper y lo reinicializamos
+    this.swiper.destroy(true, true);
+    this.swiperInit();
+
+  }
+
+
   ngAfterViewInit(): void {
+    this.swiperInit();
+  }
+
+  swiperInit() {
     const element = this.swiperDiv().nativeElement;
     if (!element) return;
-    console.log({ element });
 
-    const swiper = new Swiper(element, {
+    this.swiper = new Swiper(element, {
       // Optional parameters
       direction: 'horizontal',
       loop: true,
@@ -58,6 +78,7 @@ export class ProductCarousel implements AfterViewInit {
         el: '.swiper-scrollbar',
       },
     });
+
   }
 
 
