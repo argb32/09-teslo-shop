@@ -74,13 +74,12 @@ export class ProductDetails implements OnInit {
 
     };
 
-    //todo: creacion de nuevo producto
     if (this.product().id === 'new') {
-      //crear
 
+      //crear
       //firstvalueFrom recibe un observable y devuelve una promesa (necesario para el modal de success)
       const product = await firstValueFrom(
-        this.productsService.createProduct(productLike)
+        this.productsService.createProduct(productLike, this.imageFileList)
       );
 
       this.router.navigate(['/admin/products', product.id]);
@@ -88,7 +87,7 @@ export class ProductDetails implements OnInit {
     } else {
       //sera necesario un try catch para manejar el error
       await firstValueFrom(
-        this.productsService.updateProduct(this.product().id, productLike)
+        this.productsService.updateProduct(this.product().id, productLike, this.imageFileList)
       );
 
       //sin modal de success que se tiene que ir en un tirmpo determinado

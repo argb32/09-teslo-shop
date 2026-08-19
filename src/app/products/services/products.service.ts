@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { Gender, Product, ProductsResponse } from '../interfaces/product.interface';
-import { Observable, of, tap } from 'rxjs';
+import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { User } from '../../auth/interfaces/user.interface';
 
@@ -84,19 +84,36 @@ export class ProductsService {
     )
   }
 
-  createProduct(productLike: Partial<Product>): Observable<Product> {
+  createProduct(productLike: Partial<Product>, imageFileList?: FileList): Observable<Product> {
     return this.http.post<Product>(`${BASE_URL}/products`, productLike);
   }
 
 
 
   //Como guardamos los productos en el caché para no hacer multiples peticiones hay que limpiarlo al hacer un update
-  updateProduct(id: string, productLike: Partial<Product>): Observable<Product> {
+  updateProduct(id: string, productLike: Partial<Product>, imageFileList?: FileList): Observable<Product> {
 
-    return this.http.patch<Product>(`${BASE_URL}/products/${id}`, productLike)
-      .pipe(tap(product => this.updateProductCache(product)));
+    const currentImages = productLike.images ?? [];
+    return this.uploadImages(imageFileList)
+      .pipe(
+        map(imageName => ({
+          ...productLike,
+          images: [...currentImages, ...imageName]
+        })),
+        //ahora necesitamos llamar a la petición http, para eso disponemos del operador rxjs switchMap
+        switchMap(updatedProduct => this.http.patch<Product>(`${BASE_URL}/products/${id}`, updatedProduct)
+        ),
+        tap(product => this.updateProductCache(product))
+      );
+
+
+
+    // return this.http.patch<Product>(`${BASE_URL}/products/${id}`, productLike)
+    //   .pipe(tap(product => this.updateProductCache(product)));
 
   }
+
+  //todo: cargar imagenes en la creacion de productos como se hace en el update.
   //podriamos hacer un metodo para actualizar el cache en la creacion de producto que no haga la segunda parte de este método
   updateProductCache(product: Product) {
     const productId = product.id;
@@ -112,9 +129,33 @@ export class ProductsService {
         return currenProduct.id === productId ? product : currenProduct;
       })
     })
-
-
-
   }
+
+
+  //Necesitamos algo que tome un FileList y lo suba al back a traves de la api
+  uploadImages(images?: FileList): Observable<string[]> {
+    if (!images) return of([]);
+    console.log({ images })
+    const uploadObservables = Array.from(images)
+      .map(imageFile => this.uploadImage(imageFile));
+
+    //tenemos que esperar a que terminen de subirse todas las imágenes, y como no son promesas sino observables
+    //existe una funcion de rxjs llamada forkJoin.
+    return forkJoin(uploadObservables);
+  }
+
+  //El backend solo acepta la subida de una imagen a la vez, por lo que es necesario esta función.
+  uploadImage(imageFile: File): Observable<string> {
+    //el formData es algo propio de JS y lo que estamos creando es el body de la request de typo formData
+    const formData = new FormData();
+    formData.append('file', imageFile);
+
+    return this.http.post<{ fileName: string }>(`${BASE_URL}/files/product`, formData)
+      .pipe(map(resp => resp.fileName));
+  }
+
+
+
+
 
 }
