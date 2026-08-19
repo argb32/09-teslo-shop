@@ -7,7 +7,10 @@ const BASE_URL = `${environment.baseUrl}/files/product`;
   name: 'productImage',
 })
 export class ProductImagePipe implements PipeTransform {
-  transform(value: string | string[]): string {
+  transform(value: null | string | string[]): string {
+
+    if (value === null) return './assets/images/placeholder-images/no-image.jpg';
+
     if (typeof (value) === 'string') return `${BASE_URL}/${value}`;
 
     if (!value.at(0)) return './assets/images/placeholder-images/no-image.jpg';

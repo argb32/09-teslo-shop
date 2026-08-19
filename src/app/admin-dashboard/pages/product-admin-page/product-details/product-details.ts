@@ -6,6 +6,7 @@ import { FormUtils } from '../../../../utils/form-utils';
 import { FormErrorLabel } from "../../../../shared/components/form-error-label/form-error-label";
 import { ProductsService } from '../../../../products/services/products.service';
 import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'product-details',
@@ -18,6 +19,8 @@ export class ProductDetails implements OnInit {
   router = inject(Router);
 
   fb = inject(FormBuilder);
+
+  wasSaved = signal(false);
 
   productForm = this.fb.group({
     title: ['', Validators.required],
@@ -45,7 +48,9 @@ export class ProductDetails implements OnInit {
 
 
   }
-  onSubmit() {
+
+  //tenemos que hacer el metodo async para poder mostrar el modal de succes durante 2 seg
+  async onSubmit() {
 
     const isValid = this.productForm.valid
     this.productForm.markAllAsTouched();
@@ -68,17 +73,32 @@ export class ProductDetails implements OnInit {
     //todo: creacion de nuevo producto
     if (this.product().id === 'new') {
       //crear
-      this.productsService.createProduct(productLike).subscribe((product) => {
-        console.log('se ha creado un producto');
-        this.router.navigate(['/admin/products', product.id])
-      });
+
+      //firstvalueFrom recibe un observable y devuelve una promesa (necesario para el modal de success)
+      const product = await firstValueFrom(
+        this.productsService.createProduct(productLike)
+      );
+
+      this.router.navigate(['/admin/products', product.id]);
 
     } else {
-      this.productsService.updateProduct(this.product().id, productLike).subscribe(
-        product => {
-          console.log('Producto actualizado')
-        }
+      //sera necesario un try catch para manejar el error
+      await firstValueFrom(
+        this.productsService.updateProduct(this.product().id, productLike)
       );
+
+      //sin modal de success que se tiene que ir en un tirmpo determinado
+      // this.productsService.updateProduct(this.product().id, productLike).subscribe(
+      //   product => {
+      //     console.log('Producto actualizado')
+      //   }
+      // );
+
+      this.wasSaved.set(true);
+      setTimeout(() => {
+        this.wasSaved.set(false);
+      }, 3000)
+
     }
 
 

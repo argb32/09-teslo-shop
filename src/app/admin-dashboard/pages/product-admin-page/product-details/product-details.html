@@ -5,11 +5,7 @@
   <!-- Datos generales -->
   <div class="flex flex-col gap-2">
     <h2 class="text-2xl font-bold h-12">Datos generales</h2>
-    <input
-    formControlName="title"
-    type="text"
-    placeholder="Título"
-    class="input input-bordered w-full"
+    <input formControlName="title" type="text" placeholder="Título" class="input input-bordered w-full"
       [class.border-red-500]="productForm.get('title')?.errors ?? false" />
     <form-error-label [control]="productForm.get('title')!" />
     <input formControlName="slug" type="text" placeholder="Slug" class="input input-bordered w-full"
@@ -91,3 +87,10 @@
     <input type="file" class="file-input file-input-bordered w-full mt-4" />
   </div>
 </form>
+
+@if(wasSaved()){
+
+<div class="alert alert-success fixed bottom-4 right-4 w-80 animate-fadeIn">
+  <span>Datos guardados correctamente</span>
+</div>
+}
