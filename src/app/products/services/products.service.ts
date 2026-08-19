@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
-import { Product, ProductsResponse } from '../interfaces/product.interface';
+import { Gender, Product, ProductsResponse } from '../interfaces/product.interface';
 import { Observable, of, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { User } from '../../auth/interfaces/user.interface';
 
 const BASE_URL = environment.baseUrl
 
@@ -10,6 +11,20 @@ interface Options {
   limit?: number,
   offset?: number,
   gender?: string,
+}
+
+const emptyProduct: Product = {
+  id: 'new',
+  title: '',
+  price: 0,
+  description: '',
+  slug: '',
+  stock: 0,
+  sizes: [],
+  gender: Gender.Men,
+  tags: [],
+  images: [],
+  user: {} as User
 }
 
 @Service()
@@ -59,6 +74,10 @@ export class ProductsService {
 
   getPoductById(id: string): Observable<Product> {
 
+    if (id === 'new') {
+      return of(emptyProduct);
+    }
+
     if (this.productCache.has(id)) return of(this.productCache.get(id)!)
 
     return this.http.get<Product>(`${BASE_URL}/products/${id}`).pipe(
@@ -66,14 +85,20 @@ export class ProductsService {
     )
   }
 
-  //Como guardamos los productos en el caché para no hacer multiples peticiones hay que limpiarlo al hacer un update
-  updateProduct(id: string, productLike: Partial<Product>): Observable<Product>{
-
-    return this.http.patch<Product>(`${BASE_URL}/products/${id}`, productLike);
-
-
+  createProduct(productLike: Partial<Product>): Observable<Product> {
+    return this.http.post<Product>(`${BASE_URL}/products`, productLike);
   }
 
+
+
+  //Como guardamos los productos en el caché para no hacer multiples peticiones hay que limpiarlo al hacer un update
+  updateProduct(id: string, productLike: Partial<Product>): Observable<Product> {
+
+    return this.http.patch<Product>(`${BASE_URL}/products/${id}`, productLike)
+      .pipe(tap(product => this.updateProductCache(product)));
+
+  }
+  //podriamos hacer un metodo para actualizar el cache en la creacion de producto que no haga la segunda parte de este método
   updateProductCache(product: Product) {
     const productId = product.id;
 

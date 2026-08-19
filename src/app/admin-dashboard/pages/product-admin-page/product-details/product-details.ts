@@ -4,8 +4,8 @@ import { ProductCarousel } from "../../../../products/components/product-carouse
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormUtils } from '../../../../utils/form-utils';
 import { FormErrorLabel } from "../../../../shared/components/form-error-label/form-error-label";
-import { isValidDate } from 'rxjs/internal/util/isDate';
 import { ProductsService } from '../../../../products/services/products.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'product-details',
@@ -15,6 +15,7 @@ import { ProductsService } from '../../../../products/services/products.service'
 export class ProductDetails implements OnInit {
   product = input.required<Product>();
   productsService = inject(ProductsService)
+  router = inject(Router);
 
   fb = inject(FormBuilder);
 
@@ -49,7 +50,7 @@ export class ProductDetails implements OnInit {
     const isValid = this.productForm.valid
     this.productForm.markAllAsTouched();
 
-    if(!isValid) return;
+    if (!isValid) return;
 
     const formValue = this.productForm.value;
 
@@ -64,11 +65,22 @@ export class ProductDetails implements OnInit {
 
     };
 
-    this.productsService.updateProduct( this.product().id, productLike).subscribe(
-      product => {
-        console.log('Producto actualizado')
-      }
-    );
+    //todo: creacion de nuevo producto
+    if (this.product().id === 'new') {
+      //crear
+      this.productsService.createProduct(productLike).subscribe((product) => {
+        console.log('se ha creado un producto');
+        this.router.navigate(['/admin/products', product.id])
+      });
+
+    } else {
+      this.productsService.updateProduct(this.product().id, productLike).subscribe(
+        product => {
+          console.log('Producto actualizado')
+        }
+      );
+    }
+
 
   }
 

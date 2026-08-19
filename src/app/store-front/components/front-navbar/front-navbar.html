@@ -39,6 +39,10 @@
     </ul>
   </div>
   <div class="navbar-end gap-4">
+    @if (authServive.isAdmin()) {
+
+      <a routerLink="/admin" class="btn text-accent">Admin Panel</a>
+    }
 
     @if(authServive.authStatus() === 'authenticated'){
     <button class="btn btn-ghost">
