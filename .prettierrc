@@ -1,6 +1,8 @@
 {
-  "printWidth": 100,
+  "printWidth": 70,
   "singleQuote": true,
+  "semi": true,
+  "tabWidth": 2,
   "overrides": [
     {
       "files": "*.html",

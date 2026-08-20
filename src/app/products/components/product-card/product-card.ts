@@ -1,5 +1,5 @@
 import { Component, computed, input } from '@angular/core';
-import { RouterLink } from "@angular/router";
+import { RouterLink } from '@angular/router';
 import { Product } from '../../interfaces/product.interface';
 import { SlicePipe } from '@angular/common';
 import { ProductImagePipe } from '../../pipes/product-image-pipe';
@@ -12,6 +12,6 @@ import { ProductImagePipe } from '../../pipes/product-image-pipe';
 export class ProductCard {
   product = input.required<Product>();
   imageUrl = computed(() => {
-    return `http://localhost:3000/api/files/product/${this.product().images[0]}`
+    return `http://localhost:3000/api/files/product/${this.product().images[0]}`;
   });
 }

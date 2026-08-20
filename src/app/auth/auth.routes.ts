@@ -1,7 +1,7 @@
-import { Routes } from "@angular/router";
-import { AuthLayout } from "./layout/auth-layout/auth-layout";
-import { LoginPage } from "./pages/login-page/login-page";
-import { RegisterPage } from "./pages/register-page/register-page";
+import { Routes } from '@angular/router';
+import { AuthLayout } from './layout/auth-layout/auth-layout';
+import { LoginPage } from './pages/login-page/login-page';
+import { RegisterPage } from './pages/register-page/register-page';
 
 export const authRoutes: Routes = [
   {
@@ -10,18 +10,18 @@ export const authRoutes: Routes = [
     children: [
       {
         path: 'login',
-        component: LoginPage
+        component: LoginPage,
       },
       {
         path: 'register',
-        component: RegisterPage
+        component: RegisterPage,
       },
       {
         path: '**',
-        redirectTo: 'login'
+        redirectTo: 'login',
       },
-    ]
-  }
-]
+    ],
+  },
+];
 
 export default authRoutes;

@@ -1,4 +1,10 @@
-import { computed, effect, inject, Service, signal } from '@angular/core';
+import {
+  computed,
+  effect,
+  inject,
+  Service,
+  signal,
+} from '@angular/core';
 import { User } from '../interfaces/user.interface';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
@@ -7,24 +13,28 @@ import { tap, Observable, map, catchError, of } from 'rxjs';
 import { rxResource } from '@angular/core/rxjs-interop';
 
 type AuthStatus = 'checking' | 'authenticated' | 'not-authenticated';
-const baseUrl = environment.baseUrl
+const baseUrl = environment.baseUrl;
 
 @Service()
 export class AuthService {
   private _authStatus = signal<AuthStatus>('checking');
   private _user = signal<User | null>(null);
 
-  isAdmin = computed(() => this._user()?.roles.includes('admin') ?? false);
+  isAdmin = computed(
+    () => this._user()?.roles.includes('admin') ?? false,
+  );
 
-  private _token = signal<string | null>(localStorage.getItem('token'));
+  private _token = signal<string | null>(
+    localStorage.getItem('token'),
+  );
 
   private http = inject(HttpClient);
 
   //Con esto generamos un resource al levantar el servicio que
   // comprueba si el usuario está autenticado
   checkStatusResource = rxResource({
-    stream: () => this.checkStatus()
-  })
+    stream: () => this.checkStatus(),
+  });
 
   //computed signals son solo de lectura, por lo que no se pueden modificar
   // desde fuera
@@ -36,34 +46,40 @@ export class AuthService {
 
   //estos metodos los usamos como getters para que no puedan modificar los user y token "reales" desde el exterior
   user = computed(() => this._user());
-  token = computed(() => this._token())
+  token = computed(() => this._token());
   //para los post primero la url del endpoint y despues la data
   login(email: string, password: string): Observable<boolean> {
-    return this.http.post<AuthResponse>(`${baseUrl}/auth/login`, {
-      email,
-      password
-    }).pipe(
-      //el tap es para disparar efectos secundarios a un observable
-      map(resp => this.handleAuthSuccess(resp)),
-      //manejamos los errores
-      catchError((error: any) => this.handleAuthError(error))
-    );
+    return this.http
+      .post<AuthResponse>(`${baseUrl}/auth/login`, {
+        email,
+        password,
+      })
+      .pipe(
+        //el tap es para disparar efectos secundarios a un observable
+        map((resp) => this.handleAuthSuccess(resp)),
+        //manejamos los errores
+        catchError((error: any) => this.handleAuthError(error)),
+      );
   }
 
-  register(email: string, password: string, fullName: string): Observable<boolean> {
-    return this.http.post<AuthResponse>(`${baseUrl}/auth/login`, {
-      email,
-      password,
-      fullName
-    }).pipe(
-      //el tap es para disparar efectos secundarios a un observable
-      map(resp => this.handleAuthSuccess(resp)),
-      //manejamos los errores
-      catchError((error: any) => this.handleAuthError(error))
-    );
+  register(
+    email: string,
+    password: string,
+    fullName: string,
+  ): Observable<boolean> {
+    return this.http
+      .post<AuthResponse>(`${baseUrl}/auth/login`, {
+        email,
+        password,
+        fullName,
+      })
+      .pipe(
+        //el tap es para disparar efectos secundarios a un observable
+        map((resp) => this.handleAuthSuccess(resp)),
+        //manejamos los errores
+        catchError((error: any) => this.handleAuthError(error)),
+      );
   }
-
-
 
   checkStatus(): Observable<boolean> {
     const token = localStorage.getItem('token');
@@ -72,16 +88,18 @@ export class AuthService {
       return of(false);
     }
 
-    return this.http.get<AuthResponse>(`${baseUrl}/auth/check-status`, {
-      // headers: {
-      //   Authorization: `Bearer ${token}`,
-      // },
-    }).pipe(
-      //el tap es para disparar efectos secundarios a un observable
-      map(resp => this.handleAuthSuccess(resp)),
-      //manejamos los errores
-      catchError((error: any) => this.handleAuthError(error))
-    );
+    return this.http
+      .get<AuthResponse>(`${baseUrl}/auth/check-status`, {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // },
+      })
+      .pipe(
+        //el tap es para disparar efectos secundarios a un observable
+        map((resp) => this.handleAuthSuccess(resp)),
+        //manejamos los errores
+        catchError((error: any) => this.handleAuthError(error)),
+      );
   }
 
   logout() {
@@ -107,13 +125,11 @@ export class AuthService {
     this._token.set(token);
 
     localStorage.setItem('token', token);
-    return true
+    return true;
   }
 
   private handleAuthError(error: any) {
     this.logout();
-    return of(false)
+    return of(false);
   }
-
-
 }

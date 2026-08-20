@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { RouterLink, RouterLinkActive } from "@angular/router";
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../auth/services/authService';
 
 @Component({
@@ -9,5 +9,4 @@ import { AuthService } from '../../../auth/services/authService';
 })
 export class FrontNavbar {
   authServive = inject(AuthService);
-
 }

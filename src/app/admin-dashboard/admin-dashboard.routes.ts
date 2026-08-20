@@ -1,8 +1,8 @@
-import { Routes } from "@angular/router";
+import { Routes } from '@angular/router';
 import { AdminDashboardLayout } from './pages/admin-dashboard-layout/admin-dashboard-layout';
-import { ProductAdminPage } from "./pages/product-admin-page/product-admin-page";
-import { ProductsAdminPage } from "./pages/products-admin-page/products-admin-page";
-import { isAdminGuard } from "../auth/guards/is-admin-guard";
+import { ProductAdminPage } from './pages/product-admin-page/product-admin-page';
+import { ProductsAdminPage } from './pages/products-admin-page/products-admin-page';
+import { isAdminGuard } from '../auth/guards/is-admin-guard';
 
 export const adminDashboardRoutes: Routes = [
   {
@@ -12,18 +12,18 @@ export const adminDashboardRoutes: Routes = [
     children: [
       {
         path: 'products',
-        component: ProductsAdminPage
+        component: ProductsAdminPage,
       },
       {
         path: 'products/:id',
-        component: ProductAdminPage
+        component: ProductAdminPage,
       },
       {
         path: '**',
-        redirectTo: 'products'
+        redirectTo: 'products',
       },
-    ]
-  }
-]
+    ],
+  },
+];
 
 export default adminDashboardRoutes;

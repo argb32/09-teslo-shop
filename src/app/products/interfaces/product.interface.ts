@@ -1,4 +1,4 @@
-import { User } from "../../auth/interfaces/user.interface";
+import { User } from '../../auth/interfaces/user.interface';
 
 export interface ProductsResponse {
   count: number;
@@ -21,21 +21,16 @@ export interface Product {
 }
 
 export enum Gender {
-  Kid = "kid",
-  Men = "men",
-  Women = "women",
+  Kid = 'kid',
+  Men = 'men',
+  Women = 'women',
 }
 
 export enum Size {
-  L = "L",
-  M = "M",
-  S = "S",
-  Xl = "XL",
-  Xs = "XS",
-  Xxl = "XXL",
+  L = 'L',
+  M = 'M',
+  S = 'S',
+  Xl = 'XL',
+  Xs = 'XS',
+  Xxl = 'XXL',
 }
-
-
-
-
-

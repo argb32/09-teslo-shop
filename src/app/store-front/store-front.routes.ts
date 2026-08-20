@@ -1,9 +1,8 @@
-import { Routes } from "@angular/router";
-import { StoreFrontLayout } from "./layouts/store-front-layout/store-front-layout";
-import { HomePage } from "./pages/home-page/home-page";
-import { GenderPage } from "./pages/gender-page/gender-page";
-import { ProductPage } from "./pages/product-page/product-page";
-
+import { Routes } from '@angular/router';
+import { StoreFrontLayout } from './layouts/store-front-layout/store-front-layout';
+import { HomePage } from './pages/home-page/home-page';
+import { GenderPage } from './pages/gender-page/gender-page';
+import { ProductPage } from './pages/product-page/product-page';
 
 export const storeFrontRoutes: Routes = [
   {
@@ -12,28 +11,29 @@ export const storeFrontRoutes: Routes = [
     children: [
       {
         path: '',
-        component: HomePage
+        component: HomePage,
       },
       {
         path: 'gender/:gender',
-        component: GenderPage
+        component: GenderPage,
       },
       {
         path: 'product/:idSlug',
-        component: ProductPage
+        component: ProductPage,
       },
       {
         path: '**',
-        loadComponent: () => import('./pages/not-found-page/not-found-page')
-          .then(m => m.NotFoundPage)
+        loadComponent: () =>
+          import('./pages/not-found-page/not-found-page').then(
+            (m) => m.NotFoundPage,
+          ),
       },
-
     ],
   },
   {
     path: '**',
-    redirectTo: ''
-  }
-]
+    redirectTo: '',
+  },
+];
 
 export default storeFrontRoutes;

@@ -1,9 +1,14 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  input,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProductsService } from '../../../products/services/products.service';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { JsonPipe } from '@angular/common';
-import { ProductCarousel } from "../../../products/components/product-carousel/product-carousel";
+import { ProductCarousel } from '../../../products/components/product-carousel/product-carousel';
 
 @Component({
   selector: 'app-product-page',
@@ -12,10 +17,9 @@ import { ProductCarousel } from "../../../products/components/product-carousel/p
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class ProductPage {
-
   //para recibil la ruta necesitamos ActivatedRoute
   activatedRoute = inject(ActivatedRoute);
-  productService = inject(ProductsService)
+  productService = inject(ProductsService);
 
   //snapshot porque no necesita ser dinamicao
   productIdSlug = this.activatedRoute.snapshot.params['idSlug'];
@@ -23,9 +27,9 @@ export class ProductPage {
   productResource = rxResource({
     params: () => ({ idSlug: this.productIdSlug }),
     stream: ({ params }) => {
-      return this.productService.getProductByIdSlug(params.idSlug)
-    }
-  })
+      return this.productService.getProductByIdSlug(params.idSlug);
+    },
+  });
   //En este caso no es dinamico y tambien funcionaria sin params. Pero
   // es bueno hacerlo de la forma de arriba ya que si cambiasen los params
   // se dispara el loader automaticamente.
@@ -34,6 +38,4 @@ export class ProductPage {
   //   stream: ({ }) => this.productService.getProductByIdSlug(this.productIdSlug)
 
   // })
-
-
 }

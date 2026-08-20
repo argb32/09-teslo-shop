@@ -9,13 +9,13 @@ export class PaginationService {
 
   currentPage = toSignal(
     this.activatedRoute.queryParamMap.pipe(
-
-      map(params => params.get('page') ? +params.get('page')! : 1),
-      map(page => isNaN(page) ? 1 : page)
+      map((params) =>
+        params.get('page') ? +params.get('page')! : 1,
+      ),
+      map((page) => (isNaN(page) ? 1 : page)),
     ),
     {
       initialValue: 1,
-    }
-  )
-
+    },
+  );
 }

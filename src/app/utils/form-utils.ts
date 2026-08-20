@@ -42,7 +42,10 @@ export class FormUtils {
           return `No se puede usar el username de strider en la app`;
 
         case 'pattern':
-          if (errors['pattern'].requiredPattern === FormUtils.emailPattern) {
+          if (
+            errors['pattern'].requiredPattern ===
+            FormUtils.emailPattern
+          ) {
             return 'El valor ingresado no luce como un correo electrónico';
           }
 
@@ -56,13 +59,20 @@ export class FormUtils {
     return null;
   }
 
-  static isValidField(form: FormGroup, fieldName: string): boolean | null {
+  static isValidField(
+    form: FormGroup,
+    fieldName: string,
+  ): boolean | null {
     return (
-      !!form.controls[fieldName].errors && form.controls[fieldName].touched
+      !!form.controls[fieldName].errors &&
+      form.controls[fieldName].touched
     );
   }
 
-  static getFieldError(form: FormGroup, fieldName: string): string | null {
+  static getFieldError(
+    form: FormGroup,
+    fieldName: string,
+  ): string | null {
     if (!form.controls[fieldName]) return null;
 
     const errors = form.controls[fieldName].errors ?? {};
@@ -72,13 +82,14 @@ export class FormUtils {
 
   static isValidFieldInArray(formArray: FormArray, index: number) {
     return (
-      formArray.controls[index].errors && formArray.controls[index].touched
+      formArray.controls[index].errors &&
+      formArray.controls[index].touched
     );
   }
 
   static getFieldErrorInArray(
     formArray: FormArray,
-    index: number
+    index: number,
   ): string | null {
     if (formArray.controls.length === 0) return null;
 
@@ -92,14 +103,15 @@ export class FormUtils {
       const field1Value = formGroup.get(field1)?.value;
       const field2Value = formGroup.get(field2)?.value;
 
-      return field1Value === field2Value ? null : { passwordsNotEqual: true };
+      return field1Value === field2Value
+        ? null
+        : { passwordsNotEqual: true };
     };
   }
 
   static async checkingServerResponse(
-    control: AbstractControl
+    control: AbstractControl,
   ): Promise<ValidationErrors | null> {
-
     await sleep(); // 2 segundos y medio
 
     const formValue = control.value;
@@ -113,7 +125,9 @@ export class FormUtils {
     return null;
   }
 
-  static notStrider(control: AbstractControl): ValidationErrors | null {
+  static notStrider(
+    control: AbstractControl,
+  ): ValidationErrors | null {
     const value = control.value;
 
     return value === 'strider' ? { noStrider: true } : null;

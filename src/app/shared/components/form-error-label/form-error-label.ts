@@ -1,4 +1,8 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+} from '@angular/core';
 import { AbstractControl, ValidationErrors } from '@angular/forms';
 import { FormUtils } from '../../../utils/form-utils';
 
@@ -6,18 +10,16 @@ import { FormUtils } from '../../../utils/form-utils';
   selector: 'form-error-label',
   imports: [],
   templateUrl: './form-error-label.html',
-  changeDetection: ChangeDetectionStrategy.Eager
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class FormErrorLabel {
-
   control = input.required<AbstractControl>();
 
   getErrorMessage() {
     const errors: ValidationErrors = this.control().errors || {};
 
     return this.control().touched && Object.keys(errors).length > 0
-      ? FormUtils.getTextError(errors) :
-      null;
+      ? FormUtils.getTextError(errors)
+      : null;
   }
-
 }
